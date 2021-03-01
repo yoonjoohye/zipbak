@@ -6,12 +6,12 @@ const GlobalStyle=()=>(
           margin:0;
           padding:0;
           font-family: 'Spoqa Han Sans Neo', 'sans-serif';
-          font-size:14px;
           font-weight:400;
         }
         html, body{
           width:100vw;
           height:100vh;
+          font-size:14px;
         }
         ol, ul, li{
           list-style: none;

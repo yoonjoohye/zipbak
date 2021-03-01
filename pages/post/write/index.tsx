@@ -3,6 +3,8 @@ import styled from "@emotion/styled";
 import Container from "../../../components/templates/Container";
 import Head from "next/head";
 import useSWR from "swr";
+import axios from "axios";
+import {useRouter} from "next/router";
 
 const Wrapper = styled.main`
   padding-top: 3.5em;
@@ -25,7 +27,7 @@ const Box = styled.div`
 `
 const Divider = styled.div`
   border-bottom: 1px dashed #eee;
-  padding: 1.2em;
+  padding: 1em;
 `
 const StyleSelect = styled.select`
   width: 100%;
@@ -68,8 +70,8 @@ const RealCheckbox = styled.input`
 `
 const FakeCheckbox = styled.span`
   display: inline-block;
-  background-color: #eee;
-  color: #aaa;
+  background-color: #e3ffdb;
+  color: #0dab00;
   border-radius: 5px;
   padding: 5px 10px;
 `
@@ -77,14 +79,15 @@ const FakeCheckbox = styled.span`
 const fetcher = (url:string) => fetch(url).then(r => r.json())
 
 const Write = () => {
+    const router=useRouter();
+    const { data:categoryData } = useSWR('https://api-dev.zipbak.site/category',fetcher);
+
     const [category, setCategory] = useState('사건/사고');
     const [contents, setContents] = useState('');
-    const [placeholder, setPlaceholder] = useState('우리집에 머선일이 생겼는지 알려주세요!');
     const [emotion, setEmotion] = useState('');
-    const [floor, setFloor] = useState('');
-    const [number, setNumber] = useState('');
-
-    const { data:categoryList } = useSWR('https://api-dev.zipbak.site/category',fetcher);
+    const [target, setTarget] = useState('');
+    const [room, setRoom] = useState('');
+    const [placeholder, setPlaceholder] = useState('우리집에 머선일이 생겼는지 알려주세요!');
 
     const emotionType = [
         '😍 감동이에요',
@@ -94,14 +97,16 @@ const Write = () => {
         '🤬 화나요'
     ]
     useEffect(() => {
-        if (category === '사건/사고') {
-            setPlaceholder('우리집에 머선일이 생겼는지 알려주세요!');
-        }
-        if (category === '질문') {
-            setPlaceholder('어떤 점이 궁금한가요?');
-        }
-        if (category === '기타') {
-            setPlaceholder('이웃들과 친해져보아요! ex) 공구하실 분, 주위 맛집 아시는 분, 도와주실 분');
+        if(categoryData) {
+            if (categoryData[0].category === category) {
+                setPlaceholder('우리집에 머선일이 생겼는지 알려주세요!');
+            }
+            if (categoryData[1].category === category) {
+                setPlaceholder('어떤 점이 궁금한가요?');
+            }
+            if (categoryData[2].category === category) {
+                setPlaceholder('이웃들과 친해져보아요! ex) 공구하실 분, 주위 맛집 아시는 분, 도와주실 분');
+            }
         }
     }, [category]);
 
@@ -119,13 +124,31 @@ const Write = () => {
         setEmotion(e.target.id);
         console.log(e.target.id);
     }
-    const changeFloor = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFloor(e.target.value);
+    const changeTarget = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setTarget(e.target.value);
         console.log(e.target.value);
     }
-    const changeNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setNumber(e.target.value);
+    const changeRoom = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setRoom(e.target.value);
         console.log(e.target.value);
+    }
+    const uploadPost=async ()=>{
+        try{
+            const res=await axios.post('https://api-dev.zipbak.site/post',{
+                content:contents,
+                postType:'all',
+                category:category,
+                emotion:emotion,
+                target:target,
+                room:room
+            },{ withCredentials: true });
+            console.log(res);
+            if(res.status===201){
+                router.push('/');
+            }
+        }catch(e){
+            console.error(e);
+        }
     }
     return (
         <>
@@ -133,21 +156,21 @@ const Write = () => {
                 <title>집박구리 | 작성 페이지</title>
                 <link rel="icon" href="/favicon.ico"/>
             </Head>
-            <Container type="write" navigation={false} footer={false}>
+            <Container type="write" navigation={false} footer={false} click={uploadPost}>
                 <Wrapper>
                     <Divider>
                         <StyleSelect value={category} onChange={changeCategory}>
                             <option disabled value="default">카테고리를 선택해주세요.</option>
                             {
-                                categoryList && categoryList.map((item:string)=>(
-                                    <option key={item.name} value={item?.name}>{item?.name}</option>
+                                categoryData?.length>0 && categoryData.map((item:string)=>(
+                                    <option key={item.category} value={item?.category}>{item?.category}</option>
                                 ))
                             }
                         </StyleSelect>
                     </Divider>
                     {
-                        categoryList &&
-                        category === categoryList[0].name &&
+                        categoryData?.length>0 &&
+                        category === categoryData[0].category &&
                         <>
                             <Divider>
                                 <EmotionWrapper>
@@ -162,12 +185,12 @@ const Write = () => {
                             <Divider>
                                 <InputWrapper>
                                     <label htmlFor="private">
-                                        <RealCheckbox type="checkbox" id="private" readOnly checked={floor ? false : true}/>
-                                        <FakeCheckbox>안알랴줌</FakeCheckbox>
+                                        <RealCheckbox type="checkbox" id="private" readOnly checked={target ? false : true}/>
+                                        <FakeCheckbox>{!target && <span>안</span>}알랴줌</FakeCheckbox>
                                     </label>
                                     <Box>
-                                        <StyleInput type="number" placeholder="추정되는 층 (예시) 1" value={floor}
-                                                     onChange={changeFloor}/> 층
+                                        <StyleInput type="number" placeholder="추정되는 층 (예시) 1" value={target}
+                                                     onChange={changeTarget}/> 층
                                         </Box>
                                 </InputWrapper>
                             </Divider>
@@ -175,14 +198,14 @@ const Write = () => {
                         </>
                     }
                     {
-                        categoryList &&
-                        category === categoryList[2].name &&
+                        categoryData?.length>0 &&
+                        category === categoryData[2].category &&
                         <Divider>
                             <InputWrapper>
                                 <label htmlFor="private"><RealCheckbox type="checkbox" id="private" readOnly
-                                                                       checked={number ? false : true}/><FakeCheckbox>안알랴줌</FakeCheckbox></label>
-                                <Box><StyleInput type="number" placeholder="본인 호수 (예시) 101" value={number}
-                                                 onChange={changeNumber}/> 호</Box>
+                                                                       checked={room ? false : true}/><FakeCheckbox>안알랴줌</FakeCheckbox></label>
+                                <Box><StyleInput type="number" placeholder="본인 호수 (예시) 101" value={room}
+                                                 onChange={changeRoom}/> 호</Box>
                             </InputWrapper>
                         </Divider>
                     }

@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from "@emotion/styled";
 import Button from "../../../components/atoms/Button";
+import {signIn, useSession} from "next-auth/client";
+import axios from "axios";
 
 const Wrapper=styled.main`
   min-height: 100vh;
@@ -21,10 +23,28 @@ const ButtonWrapper=styled.div`
 `
 
 const Login = () => {
-    const onLogin = () => {
-        window?.Kakao?.Auth?.authorize({
-            redirectUri: 'http://localhost:3000/oauth'
+    const [session] = useSession();
+
+    const onLogin = async () => {
+        window?.Kakao?.Auth?.login({
+            success:  async (response:any)=> {
+                console.log(response);
+                // signIn('kakao');
+                try{
+                    const res=await axios.post('https://api-dev.zipbak.site/auth/kakao',{token:response.access_token, provider:'kakao'},{ withCredentials: true });
+                    console.log(res);
+                }catch(e){
+                    console.error(e);
+                }
+            },
+            fail: (error:any)=> {
+                console.log(error);
+            },
         });
+
+        // window?.Kakao?.Auth?.authorize({
+        //     redirectUri: `http://localhost:3000/auth/kakao`
+        // });
     }
 
     return (

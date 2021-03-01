@@ -11,6 +11,8 @@ const Img=styled.div`
   ${media.sm`
     height:250px;
   `}
+  //object-fit: cover;
+  //object-position: 100% auto;
   background-image: url('${(props:{src:string}) => props.src}');
   background-size: auto 100%;
   background-repeat: no-repeat;

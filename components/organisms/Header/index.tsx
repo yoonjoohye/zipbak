@@ -35,10 +35,11 @@ const Button=styled.button`
 `
 
 interface IProps {
-    type: 'base' | 'detail' | 'write'
+    type: 'base' | 'detail' | 'write';
+    click:void;
 }
 
-const Header = ({type}: IProps) => {
+const Header = ({type, click}: IProps) => {
     const router = useRouter();
 
     return (
@@ -66,7 +67,7 @@ const Header = ({type}: IProps) => {
                 <Box justifyContent="space-between">
                     <Icon src={CloseIcon} click={() => router.back()}/>
                     <Brand>집박구리 글쓰기</Brand>
-                    <Button>완료</Button>
+                    <Button onClick={click}>완료</Button>
                 </Box>
             }
         </Wrapper>

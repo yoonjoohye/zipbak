@@ -15,17 +15,18 @@ const Wrapper=styled.div`
     grid-template-columns: 1fr;
   `};
 `
+
 interface IProps{
-    list: {
+    postList: {
         count:number;
         list:[];
-    }
+    } | {}
 }
-const PostList=({list}:IProps)=>{
+const PostList=({postList}:IProps)=>{
     return(
         <Wrapper>
             {
-                list?.list.map((item:[], idx:number)=>(
+                postList?.list?.map((item:[], idx:number)=>(
                     <PostItem key={idx} item={item} idx={idx}/>
                 ))
             }

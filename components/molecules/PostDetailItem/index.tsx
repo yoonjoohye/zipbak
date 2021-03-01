@@ -11,7 +11,7 @@ const ProfileWrapper = styled.div`
   align-items: flex-end;
   padding: 15px 10px;
 `
-const BoardWrapper = styled.section`
+const BoardWrapper = styled.pre`
   padding: 20px 10px;
   border-top: 1px dashed #eee;
   border-bottom: 1px solid #eee;
@@ -39,12 +39,12 @@ interface IProps{
     }
     moreBoard:()=>void;
 }
-const PostDetail=({postList, moreBoard}:IProps)=>{
+const PostDetailItem=({postList, moreBoard}:IProps)=>{
     return(
         <>
             <ProfileWrapper>
                 <Profile>
-                    <Icon src={ProfileIcon} type="large"/>
+                    <Icon src={`https://cdn.zipbak.site/${postList?.profile}`} type="large"/>
                     <Margin>
                         <Bold>익명</Bold>
                         <Date>{dayjs(postList?.createdAt).format('YYYY/MM/DD')}</Date>
@@ -54,13 +54,11 @@ const PostDetail=({postList, moreBoard}:IProps)=>{
                     <Icon src={MoreHoriIcon} click={moreBoard}/>
                 </div>
             </ProfileWrapper>
-            <BoardWrapper>
-                {postList?.content}
-            </BoardWrapper>
+            <BoardWrapper dangerouslySetInnerHTML={{__html:postList?.content}}/>
             {/*<NavWrapper>*/}
             {/*    <Icon src={MsgIcon}/> 11*/}
             {/*</NavWrapper>*/}
         </>
     )
 }
-export default PostDetail;
+export default PostDetailItem;

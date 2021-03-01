@@ -1,67 +1,57 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useRouter} from "next/router";
 import styled from "@emotion/styled";
+import axios from "axios";
+import useSWR from "swr";
 import Head from "next/head";
+import ArrowIcon from "../../../public/assets/images/icn-arrow-right.svg";
 import Container from "../../../components/templates/Container";
 import Icon from "../../../components/atoms/Icon";
-import ArrowIcon from "../../../public/assets/images/icn-arrow-right.svg";
 import Color from "../../../public/assets/styles/Color.style";
 import ReplyList from "../../../components/organisms/ReplyList";
-import PostDetail from "../../../components/organisms/PostDetail";
-import useSWR from "swr";
+import PostDetailItem from "../../../components/molecules/PostDetailItem";
 
 const Wrapper = styled.main`
   padding-top: 3.5em;
   padding-bottom: 5em;
 `
-const Footer = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  border-top: 1px solid #eee;
-  padding: 10px;
-  background: #fff;
-  width: -webkit-fill-available;
-`
-const WriteWrapper = styled.div`
-  background-color: #eee;
-  border-radius: 20px;
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-`
-const StyleTextarea = styled.textarea`
-  width: 100%;
-  font-size: 16px;
-  padding-left: 10px;
-`
-const StyleButton = styled.button`
-  word-break: keep-all;
-  border-radius: 50px;
-  background: ${Color.primary};
-  width: 25px;
-  height: 25px;
-  padding: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
+
 const fetcher = (url:string) => fetch(url).then(r => r.json())
 
 const Post = () => {
     const router = useRouter();
     const {slug} = router.query;
-    const { data:postList } = useSWR(`https://api-dev.zipbak.site/post/${slug}`,fetcher);
-    const { data:replyList } = useSWR(`https://api-dev.zipbak.site/reply?limit=100&postId=${slug}`,fetcher);
+
+    const { data:postData } = useSWR(`https://api-dev.zipbak.site/post/${slug}`,fetcher);
+    const { data:replyData } = useSWR(`https://api-dev.zipbak.site/reply?limit=100&postId=${slug}`,fetcher);
+
     const [reply, setReply] = useState('');
+    const [postList, setPostList]=useState({});
+    const [replyList, setReplyList]=useState({});
+
+    useEffect(()=>{
+        if(postData) {
+            setPostList(postData);
+        }
+    },[postData]);
+
+    useEffect(()=>{
+        if(replyData) {
+            setReplyList(replyData);
+        }
+    },[replyData]);
+
+    // useEffect(()=>{
+    //     e.target.style.height = 'auto';
+    //     e.target.style.height = e.target.scrollHeight + 'px';
+    // },[reply]);
 
     console.log(postList);
     console.log(replyList);
 
     const changeReply = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        e.target.style.height = '16px';
+        e.target.style.height = 'auto';
         e.target.style.height = e.target.scrollHeight + 'px';
-
         setReply(e.target.value);
         console.log(e.target.value);
     }
@@ -70,6 +60,24 @@ const Post = () => {
     }
     const moreReply = () => {
         alert('asdf');
+    }
+    const uploadReply=async ()=>{
+        try{
+            const res=await axios.post('https://api-dev.zipbak.site/reply',{
+                content:reply,
+                postId:slug
+            },{ withCredentials: true });
+            console.log(res);
+            if(res.status===201){
+                const list=replyData?.list;
+                list.unshift(res.data);
+                const count=replyData?.count+1;
+                setReplyList({count, list});
+                setReply('');
+            }
+        }catch(e){
+            console.error(e);
+        }
     }
 
     return (
@@ -80,16 +88,8 @@ const Post = () => {
             </Head>
             <Container type="detail" navigation={false}>
                 <Wrapper>
-                    <PostDetail postList={postList} moreBoard={moreBoard}/>
-                    <ReplyList replyList={replyList} moreReply={moreReply}/>
-                    <Footer>
-                        <WriteWrapper>
-                            <StyleTextarea rows={1} placeholder="댓글을 입력해주세요;)" value={reply} onChange={changeReply}/>
-                            {
-                                reply.length > 0 && <StyleButton><Icon src={ArrowIcon}/></StyleButton>
-                            }
-                        </WriteWrapper>
-                    </Footer>
+                    <PostDetailItem postList={postList} moreBoard={moreBoard}/>
+                    <ReplyList reply={reply} changeReply={changeReply} uploadReply={uploadReply} replyList={replyList} moreReply={moreReply}/>
                 </Wrapper>
             </Container>
         </>

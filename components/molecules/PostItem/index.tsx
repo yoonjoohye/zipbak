@@ -34,7 +34,11 @@ const Footer=styled.div`
   align-items: center;
   border-top:1px dashed #eee;
   font-size:12px;
+  color:#666;
   padding:15px 10px;
+`
+const Profile=styled.span`
+  font-weight:600;
 `
 const StyleSpan=styled.span`
   margin-left:5px;
@@ -48,13 +52,13 @@ const PostItem=({item, idx}:IProps)=>{
     return(
         <Wrapper onClick={()=>router.push(`/post/${item?.id}`)}>
             <Header>
-                <Icon src={ProfileIcon}/> 익명
+                <Profile><Icon src={`https://cdn.zipbak.site/${item?.profile}`}/> 익명</Profile>
                 <StyleSpan><Label label={item?.category} type="category"/></StyleSpan>
                 {
                     item?.emotion && <StyleSpan><Label label={item?.emotion} type="emotion"/></StyleSpan>
                 }
                 {
-                    item?.target && <StyleSpan><Label label={`${item?.target}층`} type="info"/></StyleSpan>
+                    item?.target && <StyleSpan><Label label={`${item?.target}층 제발 멈춰주세요.`} type="info"/></StyleSpan>
                 }
                 {
                     item?.room && <StyleSpan><Label label={`${item?.room}층`} type="info"/></StyleSpan>

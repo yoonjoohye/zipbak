@@ -14,7 +14,7 @@ const Profile = styled.div`
   display: flex;
   align-items: flex-start;
 `;
-const Reply = styled.p`
+const Reply = styled.pre`
   margin-top: 10px;
   line-height: 1.5;
   word-break: break-word;

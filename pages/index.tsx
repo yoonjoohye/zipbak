@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import styled from "@emotion/styled";
-import Carousel from "../components/molecules/Carousel";
+import Carousel from "../components/atoms/Carousel";
 import PostList from "../components/organisms/PostList";
 import Container from "../components/templates/Container";
 import Banner1 from '../public/assets/images/banner1.jpg';
@@ -22,12 +22,14 @@ const Wrapper=styled.main`
 const fetcher = (url:string) => fetch(url).then(r => r.json())
 
 const Index=()=> {
-  const router=useRouter();
-  const { data:list, error } = useSWR('https://api-dev.zipbak.site/post?limit=100',fetcher);
-
-  console.log(list);
-
+  const { data:postData, error } = useSWR('https://api-dev.zipbak.site/post?limit=100',fetcher);
   const imgUrl=[Banner1, Banner2, Banner3];
+  const [postList, setPostList]=useState({});
+  useEffect(()=>{
+      if(postData){
+          setPostList(postData);
+      }
+  },[postData]);
 
   return (
     <>
@@ -38,7 +40,7 @@ const Index=()=> {
       <Container>
           <Wrapper>
               <Carousel imgUrl={imgUrl}/>
-              <PostList list={list}/>
+              <PostList postList={postList}/>
           </Wrapper>
       </Container>
     </>
