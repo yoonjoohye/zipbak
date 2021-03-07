@@ -22,7 +22,7 @@ const Post = () => {
     const {data: userData, error} = useSWR('https://api-local.zipbak.site/user/me', userFetcher);
     const {data: postData} = useSWR(`https://api-local.zipbak.site/post/${slug}`, fetcher);
     const {data: replyData} = useSWR(`https://api-local.zipbak.site/reply?limit=100&postId=${slug}`, fetcher);
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState(null);
     const [reply, setReply] = useState('');
     const [postList, setPostList] = useState({});
     const [replyList, setReplyList] = useState({});
@@ -44,8 +44,8 @@ const Post = () => {
     //     e.target.style.height = e.target.scrollHeight + 'px';
     // },[reply]);
 
-    console.log(postList);
-    console.log(replyList);
+    // console.log(postList);
+    // console.log(replyList);
 
     const changeReply = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         e.target.style.height = 'auto';
@@ -94,7 +94,7 @@ const Post = () => {
             <Container type="detail" navigation={false}>
                 <Wrapper>
                     <PostDetail postList={postList} moreBoard={moreBoard}/>
-                    <ReplyList userId={postList?.userId} reply={reply} changeReply={changeReply} uploadReply={uploadReply} replyList={replyList}
+                    <ReplyList postList={postList} reply={reply} changeReply={changeReply} uploadReply={uploadReply} replyList={replyList}
                                moreReply={moreReply}/>
                 </Wrapper>
             </Container>

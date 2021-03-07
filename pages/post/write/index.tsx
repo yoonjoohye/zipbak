@@ -77,13 +77,13 @@ const FakeCheckbox = styled.span`
 `
 
 const fetcher = (url: string) => fetch(url).then(r => r.json())
-const userFetcher = (url:string) => axios.get(url,{ withCredentials: true }).then(res => res.data)
+const userFetcher = (url: string) => axios.get(url, {withCredentials: true}).then(res => res.data)
 
 const Write = () => {
     const router = useRouter();
-    const { data:userData, error } = useSWR('https://api-local.zipbak.site/user/me',userFetcher);
+    const {data: userData, error} = useSWR('https://api-local.zipbak.site/user/me', userFetcher);
     const {data: categoryData} = useSWR('https://api-local.zipbak.site/category', fetcher);
-    const [user, setUser]=useState({});
+    const [user, setUser] = useState({});
     const [category, setCategory] = useState('사건/사고');
     const [contents, setContents] = useState('');
     const [emotion, setEmotion] = useState('');
@@ -99,14 +99,14 @@ const Write = () => {
         '🤬 화나요'
     ]
 
-    useEffect(()=>{
-        if(!error){
+    useEffect(() => {
+        if (!error) {
             setUser(userData);
             console.log(userData);
         } else {
             router.push('/auth/login');
         }
-    },[userData]);
+    }, [userData]);
 
     useEffect(() => {
         if (categoryData) {
@@ -124,25 +124,20 @@ const Write = () => {
 
     const changeCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setCategory(e.target.value);
-        console.log(e.target.value);
     }
     const changeContents = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         e.target.style.height = 'auto';
         e.target.style.height = e.target.scrollHeight + 'px';
         setContents(e.target.value);
-        console.log(e.target.value);
     }
-    const changeEmotion = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const changeEmotion = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmotion(e.target.id);
-        console.log(e.target.id);
     }
     const changeTarget = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTarget(e.target.value);
-        console.log(e.target.value);
     }
     const changeRoom = (e: React.ChangeEvent<HTMLInputElement>) => {
         setRoom(e.target.value);
-        console.log(e.target.value);
     }
     const uploadPost = async () => {
         try {
@@ -174,8 +169,8 @@ const Write = () => {
                         <StyleSelect value={category} onChange={changeCategory}>
                             <option disabled value="default">카테고리를 선택해주세요.</option>
                             {
-                                categoryData?.length > 0 && categoryData.map((item: string) => (
-                                    <option key={item.category} value={item?.category}>{item?.category}</option>
+                                categoryData?.map((item: any) => (
+                                    <option key={item?.category} value={item?.category}>{item?.category}</option>
                                 ))
                             }
                         </StyleSelect>
@@ -217,7 +212,8 @@ const Write = () => {
                         <Divider>
                             <InputWrapper>
                                 <label htmlFor="private"><RealCheckbox type="checkbox" id="private" readOnly
-                                                                       checked={!room}/><FakeCheckbox>{!room && <span>안</span>}알랴줌</FakeCheckbox></label>
+                                                                       checked={!room}/><FakeCheckbox>{!room &&
+                                <span>안</span>}알랴줌</FakeCheckbox></label>
                                 <Box><StyleInput type="number" placeholder="본인 호수 (예시) 101" value={room}
                                                  onChange={changeRoom}/> 호</Box>
                             </InputWrapper>

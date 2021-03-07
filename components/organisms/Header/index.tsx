@@ -3,8 +3,11 @@ import styled from "@emotion/styled";
 import {useRouter} from "next/router";
 import {css} from "@emotion/react";
 import Icon from "../../atoms/Icon";
+// @ts-ignore
 import LeftIcon from "../../../public/assets/images/icn-arrow-left.svg";
+// @ts-ignore
 import CloseIcon from "../../../public/assets/images/icn-close.svg";
+// @ts-ignore
 import Logo from "../../../public/assets/images/logo.png";
 
 const Wrapper = styled.header`
@@ -19,7 +22,7 @@ const Box = styled.div`
   height:50px;
   display: flex;
   align-items: center;
-  ${(props: { justifyContent: string }) => props.justifyContent && css`
+  ${(props: { justifyContent?: string }) => props.justifyContent && css`
     justify-content: ${props.justifyContent};
   `}
   padding: 0 1em;
@@ -37,7 +40,7 @@ const Button=styled.button`
 
 interface IProps {
     type: 'base' | 'detail' | 'write';
-    click:void;
+    click?:() => void;
 }
 
 const Header = ({type, click}: IProps) => {

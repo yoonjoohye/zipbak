@@ -1,6 +1,9 @@
 const path = require("path");
 
 module.exports = {
+    images: {
+        domains: ['http://localhost.zipbak.site:3000','http://zipbak.site'],
+    },
     webpack: (config, options) => {
         config.module.rules.push(
             {

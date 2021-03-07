@@ -2,8 +2,8 @@ import React from 'react';
 import styled from "@emotion/styled";
 import {useRouter} from "next/router";
 import Icon from "../../atoms/Icon";
+// @ts-ignore
 import MsgIcon from '../../../public/assets/images/icn-message.svg';
-import ProfileIcon from '../../../public/assets/images/icn-profile-01.svg';
 import Label from "../../atoms/Label";
 import dayjs from "dayjs";
 
@@ -28,8 +28,8 @@ const Body = styled.div`
   -webkit-box-orient: vertical;
   word-break: break-word;
   line-height: 1.5;
-  font-size:16px;
-  height:80px;
+  font-size: 16px;
+  height: 80px;
 `
 const Footer = styled.div`
   display: flex;
@@ -48,14 +48,15 @@ const Title = styled.p`
   font-size: 1.2em;
   margin-bottom: 10px;
 `
-const HighLight=styled.span`
-  font-weight:700;
+const HighLight = styled.span`
+  font-weight: 700;
   display: inline-block;
   position: relative;
-  z-index:0;
+  z-index: 0;
+
   &:after {
     content: "";
-    width:100%;
+    width: 100%;
     height: 12px;
     display: inline-block;
     background: #ffb7008c;
@@ -70,7 +71,7 @@ const StyleSpan = styled.div`
 `
 
 interface IProps {
-    item: [];
+    item: {[key:string] : any};
     idx: number;
 }
 

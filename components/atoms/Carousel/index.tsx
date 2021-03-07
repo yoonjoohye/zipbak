@@ -10,16 +10,15 @@ const Img = styled.div`
   height: 400px;
   ${media.sm`
     height:250px;
-  `} //object-fit: cover;
-          //object-position: 100% auto;
-  background-image: url('${(props: { src: string }) => props.src}');
+  `}
+  background-image: url('${(props: { url: string }) => props.url}');
   background-size: auto 100%;
   background-repeat: no-repeat;
   background-position: center;
 `
 
 interface IProps {
-    imgUrl: String[];
+    imgUrl: string[];
 }
 
 const Carousel = ({imgUrl}: IProps) => {
@@ -35,8 +34,8 @@ const Carousel = ({imgUrl}: IProps) => {
     return (
         <Slider {...settings}>
             {
-                imgUrl.map((url: String, idx: number) => (
-                    <Img src={url} key={idx}/>
+                imgUrl.map((item: string, idx: number) => (
+                    <Img url={item} key={idx}/>
                 ))
             }
         </Slider>

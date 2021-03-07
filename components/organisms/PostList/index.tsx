@@ -31,13 +31,13 @@ interface IProps{
     postList: {
         count:number;
         list:[];
-    } | {}
+    } | null
 }
 const PostList=({postList}:IProps)=>{
     return(
         <Wrapper>
             {
-                postList?.list?.length>0 ? postList?.list?.map((item:[], idx:number)=>(
+                postList ? postList?.list?.map((item:[], idx:number)=>(
                     <PostItem key={idx} item={item} idx={idx}/>
                 )):
                     <EmptyWrapper>

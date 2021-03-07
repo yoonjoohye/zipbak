@@ -1,57 +1,73 @@
 import React from 'react';
 import styled from "@emotion/styled";
-import Button from "../../../components/atoms/Button";
-import {signIn, useSession} from "next-auth/client";
 import axios from "axios";
 import {useRouter} from "next/router";
+import {css} from "@emotion/react";
+// @ts-ignore
+import KakaoImg from "../../../public/assets/images/btn-kakao.png";
 
-const Wrapper=styled.main`
+const Wrapper = styled.main`
   min-height: 100vh;
 `
-const Box=styled.div`
-  padding:10%;
+const Box = styled.div`
+  padding: 10%;
 `
-const Brand=styled.div`
-  font-size:30px;
+const Brand = styled.div`
+  font-size: 30px;
   font-weight: 500;
-  margin-bottom:10px;
+  margin-bottom: 10px;
 `
-const Content=styled.p`
-  margin-bottom:50px;
+const Content = styled.p`
+  margin-bottom: 50px;
   word-break: keep-all;
 `
-const ButtonWrapper=styled.div`
-`
 
+interface IProps {
+    styleType: any;
+}
+
+const Button = styled.button<IProps>`
+  ${(props: IProps) => props.styleType === 'kakao' && css`
+    background: url(${KakaoImg});
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 60px;
+  `};
+
+  &:focus {
+    outline: none;
+  }
+`
 const Login = () => {
     const router = useRouter();
 
     const onLogin = async () => {
+        // @ts-ignore
         window?.Kakao?.Auth?.login({
-            success:  async (response:any)=> {
+            success: async (response: any) => {
                 console.log(response);
-                try{
-                    const res=await axios.post('/auth/kakao',{token:response.access_token, provider:'kakao'},{ withCredentials: true });
+                try {
+                    const res = await axios.post('/auth/kakao', {
+                        token: response.access_token,
+                        provider: 'kakao'
+                    }, {withCredentials: true});
                     console.log(res);
-                    if(res.status===200){
+                    if (res.status === 200) {
                         if (document.referrer && document.referrer.includes('localhost' || 'zipbak.site')) {
                             await router.back();
                         } else {
                             await router.push('/');
                         }
                     }
-                }catch(e){
+                } catch (e) {
                     console.error(e);
                 }
             },
-            fail: (error:any)=> {
+            fail: (error: any) => {
                 console.log(error);
             },
         });
-
-        // window?.Kakao?.Auth?.authorize({
-        //     redirectUri: `http://localhost:3000/auth/kakao`
-        // });
     }
 
     return (
@@ -62,20 +78,9 @@ const Login = () => {
                     휴엔하임 커뮤니티 활성화를 위해 만들어졌어요!<br/>
                     우리 함께 좋은 이웃관계를 만들어봐요!
                 </Content>
-                {/*<div>*/}
-                {/*    <strong>*/}
-                {/*        개발자 소개*/}
-                {/*    </strong>*/}
-                {/*    <p>*/}
-                {/*        안녕하세요!<br/>*/}
-                {/*        저희는 419호에 살고있는 개발자입니다!<br/>*/}
-                {/*        좋은 이웃관계를 만들고 싶어서 만들었어용!<br/>*/}
-                {/*        많은 이용 부탁드려요!*/}
-                {/*    </p>*/}
-                {/*</div>*/}
-                <ButtonWrapper>
-                    <Button type="kakao" onButton={onLogin}/>
-                </ButtonWrapper>
+                <div>
+                    <Button styleType="kakao" onClick={onLogin}/>
+                </div>
             </Box>
         </Wrapper>
     )

@@ -1,7 +1,8 @@
-import Icon from "../../atoms/Icon";
-import MoreHoriIcon from "../../../public/assets/images/icn-more-hori.svg";
 import React from "react";
 import styled from "@emotion/styled";
+import Icon from "../../atoms/Icon";
+// @ts-ignore
+import MoreHoriIcon from '../../../public/assets/images/icn-more-hori.svg';
 import dayjs from "dayjs";
 import {getFormattedText} from "../../../utils/getFormattedText";
 
@@ -36,7 +37,7 @@ const Margin = styled.div`
 interface IProps{
     postList:{
         [key:string]:any;
-    }
+    } | null;
     moreBoard:()=>void;
 }
 const PostDetail=({postList, moreBoard}:IProps)=>{

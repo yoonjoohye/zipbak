@@ -1,9 +1,6 @@
 import React from "react";
 import ReplyItem from "../../molecules/ReplyItem";
 import styled from "@emotion/styled";
-import Icon from "../../atoms/Icon";
-import ArrowIcon from "../../../public/assets/images/icn-arrow-right.svg";
-import Color from "../../../public/assets/styles/Color.style";
 import ReplyInput from "../../molecules/ReplyInput";
 
 const Wrapper = styled.article`
@@ -18,22 +15,21 @@ const Wrapper = styled.article`
 
 
 interface IProps{
-    userId:string;
+    postList:any;
     reply:string,
-    changeReply:()=>void;
+    changeReply:(e: React.ChangeEvent<HTMLTextAreaElement>)=>void;
     uploadReply:()=>void;
     replyList:{
-        count:number;
-        list:[];
-    }
+       [key:string]:any;
+    };
     moreReply:()=>void;
 }
-const ReplyList=({userId, reply, changeReply, uploadReply, replyList, moreReply}:IProps)=>{
+const ReplyList=({postList, reply, changeReply, uploadReply, replyList, moreReply}:IProps)=>{
     return(
         <>
             {
                 replyList?.count > 0 ? replyList?.list.map((item:[], idx: number) => (
-                    <ReplyItem key={idx} userId={userId} item={item} idx={idx} moreReply={moreReply}/>
+                    <ReplyItem key={idx} userId={postList?.userId} item={item} idx={idx} moreReply={moreReply}/>
                 )):
                     <Wrapper>
                         🥺<br/>

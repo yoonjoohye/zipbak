@@ -1,4 +1,5 @@
 import Icon from "../../atoms/Icon";
+// @ts-ignore
 import ArrowIcon from "../../../public/assets/images/icn-send.svg";
 import React from "react";
 import styled from "@emotion/styled";
@@ -27,7 +28,7 @@ const StyleTextarea = styled.textarea`
 `
 interface IProps{
     reply:string;
-    changeReply:()=>void;
+    changeReply:(e: React.ChangeEvent<HTMLTextAreaElement>)=>void;
     uploadReply:()=>void;
 }
 const ReplyInput=({reply, changeReply, uploadReply}:IProps)=>{

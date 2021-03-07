@@ -1,8 +1,11 @@
 import React from 'react';
 import styled from "@emotion/styled";
 import {useRouter} from "next/router";
+// @ts-ignore
 import HomeIcon from '../../../public/assets/images/icn-home.svg';
+// @ts-ignore
 import ProfileIcon from '../../../public/assets/images/icn-profile.svg';
+// @ts-ignore
 import PencilIcon from '../../../public/assets/images/icn-pencil.svg';
 import Icon from "../../atoms/Icon";
 import Color from "../../../public/assets/styles/Color.style";

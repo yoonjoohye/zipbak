@@ -1,14 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import Head from 'next/head'
-import { useRouter } from 'next/router'
 import styled from "@emotion/styled";
 import Carousel from "../components/atoms/Carousel";
 import PostList from "../components/organisms/PostList";
 import Container from "../components/templates/Container";
+// @ts-ignore
 import Banner1 from '../public/assets/images/banner1.jpg';
+// @ts-ignore
 import Banner2 from '../public/assets/images/banner2.jpg';
+// @ts-ignore
 import Banner3 from '../public/assets/images/banner3.png';
-import Color from "../public/assets/styles/Color.style";
 import useSWR from "swr";
 import axios from "axios";
 
@@ -17,16 +18,14 @@ const Wrapper=styled.main`
   padding-bottom: 80px;
   min-height:100vh;
   height:100%;
-  //background: ${Color.background};
 `
 const postFetcher = (url:string) => fetch(url).then(r => r.json())
 const userFetcher = (url:string) => axios.get(url,{ withCredentials: true }).then(res => res.data)
 const Index=()=> {
   const { data:postData } = useSWR('https://api-local.zipbak.site/post?limit=100',postFetcher);
   const { data:userData, error } = useSWR('https://api-local.zipbak.site/user/me',userFetcher);
-
   const imgUrl=[Banner1, Banner2, Banner3];
-  const [postList, setPostList]=useState({});
+  const [postList, setPostList]=useState(null);
   const [user, setUser]=useState(null);
 
     useEffect(()=>{

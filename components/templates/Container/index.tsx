@@ -4,18 +4,19 @@ import Footer from "../../organisms/Footer";
 import Navigation from "../../organisms/Navigation";
 
 interface IProps {
-    header:boolean;
-    navigation:boolean;
-    footer:boolean;
-    type: 'base' | 'detail' | 'write';
+    header?:boolean;
+    navigation?:boolean;
+    footer?:boolean;
+    type?: 'base' | 'detail' | 'write';
     user?:{
         id:string;
         socialId:number;
-    }|null;
-    click?:void;
+    } | null;
+    click?:() => void;
+    children: any;
 }
 
-const Container:React.FC<IProps> = ({header = true, navigation = true, footer = true, type = 'base', user=null, click, children}) => {
+const Container= ({header = true, navigation = true, footer = true, type = 'base', user=null, click, children}:IProps) => {
     return (
         <>
             { header && <Header type={type} click={click}/>}
