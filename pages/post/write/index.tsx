@@ -5,6 +5,7 @@ import Head from "next/head";
 import useSWR from "swr";
 import axios from "axios";
 import {useRouter} from "next/router";
+import {getBaseUrl} from "../../../utils/getBaseUrl";
 
 const Wrapper = styled.main`
   padding-top: 3.5em;
@@ -81,8 +82,8 @@ const userFetcher = (url: string) => axios.get(url, {withCredentials: true}).the
 
 const Write = () => {
     const router = useRouter();
-    const {data: userData, error} = useSWR('https://api-local.zipbak.site/user/me', userFetcher);
-    const {data: categoryData} = useSWR('https://api-local.zipbak.site/category', fetcher);
+    const {data: userData, error} = useSWR(`${getBaseUrl()}/user/me`, userFetcher);
+    const {data: categoryData} = useSWR(`${getBaseUrl()}/category`, fetcher);
     const [user, setUser] = useState({});
     const [category, setCategory] = useState('사건/사고');
     const [contents, setContents] = useState('');

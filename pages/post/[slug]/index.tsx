@@ -7,6 +7,7 @@ import Head from "next/head";
 import Container from "../../../components/templates/Container";
 import ReplyList from "../../../components/organisms/ReplyList";
 import PostDetail from "../../../components/molecules/PostDetail";
+import {getBaseUrl} from "../../../utils/getBaseUrl";
 
 const Wrapper = styled.main`
   padding-top: 3.5em;
@@ -19,9 +20,9 @@ const userFetcher = (url: string) => axios.get(url, {withCredentials: true}).the
 const Post = () => {
     const router = useRouter();
     const {slug} = router.query;
-    const {data: userData, error} = useSWR('https://api-local.zipbak.site/user/me', userFetcher);
-    const {data: postData} = useSWR(`https://api-local.zipbak.site/post/${slug}`, fetcher);
-    const {data: replyData} = useSWR(`https://api-local.zipbak.site/reply?limit=100&postId=${slug}`, fetcher);
+    const {data: userData, error} = useSWR(`${getBaseUrl()}/user/me`, userFetcher);
+    const {data: postData} = useSWR(`${getBaseUrl()}/post/${slug}`, fetcher);
+    const {data: replyData} = useSWR(`${getBaseUrl()}/reply?limit=100&postId=${slug}`, fetcher);
     const [user, setUser] = useState(null);
     const [reply, setReply] = useState('');
     const [postList, setPostList] = useState({});
