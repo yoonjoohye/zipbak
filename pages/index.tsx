@@ -12,51 +12,52 @@ import Banner2 from '../public/assets/images/banner2.jpg';
 import Banner3 from '../public/assets/images/banner3.png';
 import useSWR from "swr";
 import axios from "axios";
+import {getBaseUrl} from "../utils/getBaseUrl";
 
-const Wrapper=styled.main`
-  padding-top:3.5em;
+const Wrapper = styled.main`
+  padding-top: 3.5em;
   padding-bottom: 80px;
-  min-height:100vh;
-  height:100%;
+  min-height: 100vh;
+  height: 100%;
 `
-const postFetcher = (url:string) => fetch(url).then(r => r.json())
-const userFetcher = (url:string) => axios.get(url,{ withCredentials: true }).then(res => res.data)
-const Index=()=> {
-  const { data:postData } = useSWR('https://api-local.zipbak.site/post?limit=100',postFetcher);
-  const { data:userData, error } = useSWR('https://api-local.zipbak.site/user/me',userFetcher);
-  const imgUrl=[Banner1, Banner2, Banner3];
-  const [postList, setPostList]=useState(null);
-  const [user, setUser]=useState(null);
+const postFetcher = (url: string) => fetch(url).then(r => r.json())
+const userFetcher = (url: string) => axios.get(url, {withCredentials: true}).then(res => res.data)
+const Index = () => {
+    const {data: userData, error} = useSWR(`${getBaseUrl()}/user/me`, userFetcher);
+    const {data: postData} = useSWR(`${getBaseUrl()}/post?limit=100`, postFetcher);
+    const imgUrl = [Banner1, Banner2, Banner3];
+    const [postList, setPostList] = useState(null);
+    const [user, setUser] = useState(null);
 
-    useEffect(()=>{
-      if(postData){
-          setPostList(postData);
-      }
-  },[postData]);
+    useEffect(() => {
+        if (postData) {
+            setPostList(postData);
+        }
+    }, [postData]);
 
-    useEffect(()=>{
-        if(!error){
+    useEffect(() => {
+        if (!error) {
             setUser(userData);
             console.log(userData);
         } else {
             console.log(error);
         }
-    },[userData]);
+    }, [userData]);
 
-  return (
-    <>
-      <Head>
-        <title>집박구리 | 오늘은 누구집이고</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <Container user={user}>
-          <Wrapper>
-              <Carousel imgUrl={imgUrl}/>
-              <PostList postList={postList}/>
-          </Wrapper>
-      </Container>
-    </>
-  )
+    return (
+        <>
+            <Head>
+                <title>집박구리 | 오늘은 누구집이고</title>
+                <link rel="icon" href="/favicon.ico"/>
+            </Head>
+            <Container user={user}>
+                <Wrapper>
+                    <Carousel imgUrl={imgUrl}/>
+                    <PostList postList={postList}/>
+                </Wrapper>
+            </Container>
+        </>
+    )
 }
 
 export default Index

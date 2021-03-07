@@ -3,9 +3,10 @@ import Head from "next/head";
 import Script from "./_script";
 import GlobalStyle from "../public/assets/styles/Global.style";
 import axios from 'axios';
+import {getBaseUrl} from "../utils/getBaseUrl";
 
 const App=({ Component, pageProps }:any)=>{
-  axios.defaults.baseURL = 'https://api-local.zipbak.site';
+    axios.defaults.baseURL = getBaseUrl();
   return (
       <>
         <Head>
