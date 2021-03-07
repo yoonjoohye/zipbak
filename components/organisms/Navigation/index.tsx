@@ -7,6 +7,7 @@ import PencilIcon from '../../../public/assets/images/icn-pencil.svg';
 import Icon from "../../atoms/Icon";
 import Color from "../../../public/assets/styles/Color.style";
 import {keyframes} from "@emotion/react";
+import axios from "axios";
 
 const Footer=styled.footer`
   display:grid;
@@ -67,9 +68,26 @@ const Ping=styled.div`
   background-color: ${Color.primary};
   animation: ${ping} 0.8s ease-in-out infinite both;
 `
-
-const Navigation=()=>{
+interface IProps{
+    user?:{
+        id:string;
+        socialId:number;
+    }|null;
+}
+const Navigation=({user}:IProps)=>{
     const router=useRouter();
+
+    const goLogout=async ()=>{
+        try{
+            const res=await axios.post('/user/logout',{},{withCredentials: true});
+            if(res.status===200){
+                router.push('/auth/login');
+            }
+        }catch(e){
+            console.error(e);
+        }
+
+    }
     return(
         <Footer>
             <Li onClick={()=>router.push('/')}>
@@ -81,12 +99,18 @@ const Navigation=()=>{
                 <IconWrapper>
                     <Icon src={PencilIcon} type="large"/>
                 </IconWrapper>
-                {/*<StyleSpan>글쓰기</StyleSpan>*/}
             </Li>
-            <Li onClick={()=>router.push('/auth/login')}>
-                <Icon src={ProfileIcon}/>
-                <StyleSpan>로그인</StyleSpan>
-            </Li>
+            {
+                user ?
+                    <Li onClick={goLogout}>
+                        <Icon src={ProfileIcon}/>
+                        <StyleSpan>로그아웃</StyleSpan>
+                    </Li>:
+                    <Li onClick={() => router.push('/auth/login')}>
+                        <Icon src={ProfileIcon}/>
+                        <StyleSpan>로그인</StyleSpan>
+                    </Li>
+            }
         </Footer>
     )
 }

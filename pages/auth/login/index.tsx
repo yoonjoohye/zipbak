@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 import Button from "../../../components/atoms/Button";
 import {signIn, useSession} from "next-auth/client";
 import axios from "axios";
+import {useRouter} from "next/router";
 
 const Wrapper=styled.main`
   min-height: 100vh;
@@ -23,16 +24,22 @@ const ButtonWrapper=styled.div`
 `
 
 const Login = () => {
-    const [session] = useSession();
+    const router = useRouter();
 
     const onLogin = async () => {
         window?.Kakao?.Auth?.login({
             success:  async (response:any)=> {
                 console.log(response);
-                // signIn('kakao');
                 try{
-                    const res=await axios.post('https://api-dev.zipbak.site/auth/kakao',{token:response.access_token, provider:'kakao'},{ withCredentials: true });
+                    const res=await axios.post('/auth/kakao',{token:response.access_token, provider:'kakao'},{ withCredentials: true });
                     console.log(res);
+                    if(res.status===200){
+                        if (document.referrer && document.referrer.includes('localhost' || 'zipbak.site')) {
+                            await router.back();
+                        } else {
+                            await router.push('/');
+                        }
+                    }
                 }catch(e){
                     console.error(e);
                 }

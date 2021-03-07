@@ -23,7 +23,7 @@ const InputWrapper = styled.div`
 const Box = styled.div`
   display: flex;
   align-items: center;
-  font-size: 16px;
+  font-size: 14px;
 `
 const Divider = styled.div`
   border-bottom: 1px dashed #eee;
@@ -31,17 +31,17 @@ const Divider = styled.div`
 `
 const StyleSelect = styled.select`
   width: 100%;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
 `
 const StyleTextarea = styled.textarea`
   width: 100%;
-  font-size: 16px;
+  font-size: 14px;
 `
 const StyleInput = styled.input`
   text-align: right;
   width: 200px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
 `
 const RealRadio = styled.input`
@@ -70,18 +70,20 @@ const RealCheckbox = styled.input`
 `
 const FakeCheckbox = styled.span`
   display: inline-block;
-  background-color: #e3ffdb;
-  color: #0dab00;
+  background-color: #dbf5ff;
+  color: #007dff;
   border-radius: 5px;
   padding: 5px 10px;
 `
 
-const fetcher = (url:string) => fetch(url).then(r => r.json())
+const fetcher = (url: string) => fetch(url).then(r => r.json())
+const userFetcher = (url:string) => axios.get(url,{ withCredentials: true }).then(res => res.data)
 
 const Write = () => {
-    const router=useRouter();
-    const { data:categoryData } = useSWR('https://api-dev.zipbak.site/category',fetcher);
-
+    const router = useRouter();
+    const { data:userData, error } = useSWR('https://api-local.zipbak.site/user/me',userFetcher);
+    const {data: categoryData} = useSWR('https://api-local.zipbak.site/category', fetcher);
+    const [user, setUser]=useState({});
     const [category, setCategory] = useState('사건/사고');
     const [contents, setContents] = useState('');
     const [emotion, setEmotion] = useState('');
@@ -96,8 +98,18 @@ const Write = () => {
         '😩 억울해요',
         '🤬 화나요'
     ]
+
+    useEffect(()=>{
+        if(!error){
+            setUser(userData);
+            console.log(userData);
+        } else {
+            router.push('/auth/login');
+        }
+    },[userData]);
+
     useEffect(() => {
-        if(categoryData) {
+        if (categoryData) {
             if (categoryData[0].category === category) {
                 setPlaceholder('우리집에 머선일이 생겼는지 알려주세요!');
             }
@@ -132,21 +144,21 @@ const Write = () => {
         setRoom(e.target.value);
         console.log(e.target.value);
     }
-    const uploadPost=async ()=>{
-        try{
-            const res=await axios.post('https://api-dev.zipbak.site/post',{
-                content:contents,
-                postType:'all',
-                category:category,
-                emotion:emotion,
-                target:target,
-                room:room
-            },{ withCredentials: true });
+    const uploadPost = async () => {
+        try {
+            const res = await axios.post('/post', {
+                content: contents,
+                postType: 'all',
+                category: category,
+                emotion: emotion,
+                target: target,
+                room: room
+            }, {withCredentials: true});
             console.log(res);
-            if(res.status===201){
+            if (res.status === 201) {
                 router.push('/');
             }
-        }catch(e){
+        } catch (e) {
             console.error(e);
         }
     }
@@ -162,21 +174,22 @@ const Write = () => {
                         <StyleSelect value={category} onChange={changeCategory}>
                             <option disabled value="default">카테고리를 선택해주세요.</option>
                             {
-                                categoryData?.length>0 && categoryData.map((item:string)=>(
+                                categoryData?.length > 0 && categoryData.map((item: string) => (
                                     <option key={item.category} value={item?.category}>{item?.category}</option>
                                 ))
                             }
                         </StyleSelect>
                     </Divider>
                     {
-                        categoryData?.length>0 &&
+                        categoryData?.length > 0 &&
                         category === categoryData[0].category &&
                         <>
                             <Divider>
                                 <EmotionWrapper>
-                                    {emotionType.map((item:string)=>(
+                                    {emotionType.map((item: string) => (
                                         <label htmlFor={item} key={item}>
-                                            <RealRadio type="radio" name="emotion" id={item} value={emotion} onChange={changeEmotion}/>
+                                            <RealRadio type="radio" name="emotion" id={item} value={emotion}
+                                                       onChange={changeEmotion}/>
                                             <FakeRadio>{item}</FakeRadio>
                                         </label>
                                     ))}
@@ -185,25 +198,26 @@ const Write = () => {
                             <Divider>
                                 <InputWrapper>
                                     <label htmlFor="private">
-                                        <RealCheckbox type="checkbox" id="private" readOnly checked={target ? false : true}/>
+                                        <RealCheckbox type="checkbox" id="private" readOnly
+                                                      checked={!target}/>
                                         <FakeCheckbox>{!target && <span>안</span>}알랴줌</FakeCheckbox>
                                     </label>
                                     <Box>
                                         <StyleInput type="number" placeholder="추정되는 층 (예시) 1" value={target}
-                                                     onChange={changeTarget}/> 층
-                                        </Box>
+                                                    onChange={changeTarget}/> 층
+                                    </Box>
                                 </InputWrapper>
                             </Divider>
 
                         </>
                     }
                     {
-                        categoryData?.length>0 &&
+                        categoryData?.length > 0 &&
                         category === categoryData[2].category &&
                         <Divider>
                             <InputWrapper>
                                 <label htmlFor="private"><RealCheckbox type="checkbox" id="private" readOnly
-                                                                       checked={room ? false : true}/><FakeCheckbox>안알랴줌</FakeCheckbox></label>
+                                                                       checked={!room}/><FakeCheckbox>{!room && <span>안</span>}알랴줌</FakeCheckbox></label>
                                 <Box><StyleInput type="number" placeholder="본인 호수 (예시) 101" value={room}
                                                  onChange={changeRoom}/> 호</Box>
                             </InputWrapper>

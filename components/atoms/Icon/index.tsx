@@ -3,13 +3,13 @@ import { css } from "@emotion/react";
 
 const Img=styled.img`
   ${(props:{type:string})=>props.type==="small" && css`
-      width:0.8em;
-      height:0.8em;
+      width:1em;
+      height:1em;
   `}
   
   ${(props:{type:string})=>props.type==="base" && css`
-      width:1em;
-      height:1em;
+      width:1.5em;
+      height:1.5em;
   `}
   ${(props:{type:string})=>props.type==="large" && css`
       width:2em;
@@ -21,8 +21,8 @@ const Img=styled.img`
 
 interface IProps{
     src: string;
-    type:'small' | 'base' | 'large';
-    click?: ()=>void;
+    type?:'small' | 'base' | 'large';
+    click?: () => void;
 }
 const Icon=({src, type='base', click}:IProps)=>{
     return(

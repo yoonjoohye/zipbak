@@ -1,9 +1,9 @@
 import Icon from "../../atoms/Icon";
-import ProfileIcon from "../../../public/assets/images/icn-profile-01.svg";
 import MoreHoriIcon from "../../../public/assets/images/icn-more-hori.svg";
 import React from "react";
 import styled from "@emotion/styled";
 import dayjs from "dayjs";
+import {getFormattedText} from "../../../utils/getFormattedText";
 
 const ProfileWrapper = styled.div`
   display: flex;
@@ -11,7 +11,7 @@ const ProfileWrapper = styled.div`
   align-items: flex-end;
   padding: 15px 10px;
 `
-const BoardWrapper = styled.pre`
+const BoardWrapper = styled.p`
   padding: 20px 10px;
   border-top: 1px dashed #eee;
   border-bottom: 1px solid #eee;
@@ -23,11 +23,11 @@ const Profile = styled.div`
   align-items: flex-start;
 `
 const Bold = styled.strong`
-  font-weight: 600;
+  font-weight: 500;
 `
 const Date=styled.div`
   font-size:12px;
-  font-weight: 300;
+  color:#666;
   margin-top:5px;
 `
 const Margin = styled.div`
@@ -39,26 +39,21 @@ interface IProps{
     }
     moreBoard:()=>void;
 }
-const PostDetailItem=({postList, moreBoard}:IProps)=>{
+const PostDetail=({postList, moreBoard}:IProps)=>{
     return(
         <>
             <ProfileWrapper>
                 <Profile>
-                    <Icon src={`https://cdn.zipbak.site/${postList?.profile}`} type="large"/>
+                    <Icon src={`https://cdn.zipbak.site/${postList?.user?.profile}`} type="large"/>
                     <Margin>
-                        <Bold>익명</Bold>
+                        <Bold>{postList?.user?.nickname}</Bold>
                         <Date>{dayjs(postList?.createdAt).format('YYYY/MM/DD')}</Date>
                     </Margin>
                 </Profile>
-                <div>
-                    <Icon src={MoreHoriIcon} click={moreBoard}/>
-                </div>
+                <Icon src={MoreHoriIcon} click={moreBoard} type="small"/>
             </ProfileWrapper>
-            <BoardWrapper dangerouslySetInnerHTML={{__html:postList?.content}}/>
-            {/*<NavWrapper>*/}
-            {/*    <Icon src={MsgIcon}/> 11*/}
-            {/*</NavWrapper>*/}
+            <BoardWrapper dangerouslySetInnerHTML={{__html:getFormattedText(postList?.content)}}/>
         </>
     )
 }
-export default PostDetailItem;
+export default PostDetail;

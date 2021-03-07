@@ -5,7 +5,7 @@ import {css} from "@emotion/react";
 import Icon from "../../atoms/Icon";
 import LeftIcon from "../../../public/assets/images/icn-arrow-left.svg";
 import CloseIcon from "../../../public/assets/images/icn-close.svg";
-import Logo from "../../../public/assets/images/logo.svg";
+import Logo from "../../../public/assets/images/logo.png";
 
 const Wrapper = styled.header`
   border-bottom: 1px solid #eee;
@@ -16,12 +16,13 @@ const Wrapper = styled.header`
   z-index: 2;
 `
 const Box = styled.div`
+  height:50px;
   display: flex;
   align-items: center;
   ${(props: { justifyContent: string }) => props.justifyContent && css`
     justify-content: ${props.justifyContent};
   `}
-  padding: 1em;
+  padding: 0 1em;
 `
 const IconWrapper = styled.span`
   margin-right:10px;

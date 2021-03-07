@@ -6,25 +6,27 @@ const StyleLabel = styled.span`
   color: #000000;
   border-radius: 3px;
   font-size: 12px;
-  padding: 3px 8px;
-  ${(props:{type:string}) => 
-    props.type === 'category' && css`
+  padding: 0 8px;
+  display: flex;
+  height: 20px;
+  justify-content: center;
+  align-items: center;
+  ${(props: { type: string }) =>
+          props.type === 'category' && css`
             background-color: #eee;
+            color:#666;
           `};
-  ${(props:{type:string}) => 
-    props.type === 'emotion' && css`
+  ${(props: { type: string }) =>
+          props.type === 'emotion' && css`
             background-color: #fcf1ca;
           `};
-  ${(props:{type:string}) =>
-          props.type === 'info' && css`
-            background-color: #fdd9d9;
-          `};
-  ${(props:{type:string}) =>
+  ${(props: { type: string }) =>
           props.type === 'outline' && css`
-        border:1px solid ${Color.primary};
-        color:${Color.primary};
+            display: inline-flex;
+            border: 1px solid ${Color.primary};
+            color: ${Color.primary};
           `};
-  
+
 `;
 
 interface IProps {
