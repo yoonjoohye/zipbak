@@ -29,6 +29,7 @@ const Body = styled.div`
   word-break: break-word;
   line-height: 1.5;
   font-size:16px;
+  height:80px;
 `
 const Footer = styled.div`
   display: flex;
@@ -89,7 +90,7 @@ const PostItem = ({item, idx}: IProps) => {
                     item?.room && <Title><HighLight>{item?.room}호에 사는 사람입니다.</HighLight></Title>
                 }
                 {
-                    item?.target && <Title><HighLight>{item?.target}층에 사시는 분은 꼭 읽어주세요.</HighLight></Title>
+                    item?.target && <Title><HighLight>{item?.target}층에 거주하시는 분은 꼭 읽어주세요.</HighLight></Title>
                 }
                 {item?.content}
             </Body>
