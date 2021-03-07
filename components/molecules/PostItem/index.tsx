@@ -90,7 +90,7 @@ const PostItem = ({item, idx}: IProps) => {
                     item?.room && <Title><HighLight>{item?.room}호에 사는 사람입니다.</HighLight></Title>
                 }
                 {
-                    item?.target && <Title><HighLight>{item?.target}층에 거주하시는 분은 꼭 읽어주세요.</HighLight></Title>
+                    item?.target && <Title><HighLight>이 글은 {item?.target}층 거주자에게 전달드립니다.</HighLight></Title>
                 }
                 {item?.content}
             </Body>
